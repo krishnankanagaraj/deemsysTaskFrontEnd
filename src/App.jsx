@@ -15,6 +15,7 @@ function App() {
   const [fetchProducts,setFetchProducts]=useState(true)
   const [fetchUser,setFetchUser]=useState(true)
   const API=useSelector(api)
+  console.log(API)
   const dispatch=useDispatch();
   useEffect(()=>{
     const data=localStorage.getItem('products')

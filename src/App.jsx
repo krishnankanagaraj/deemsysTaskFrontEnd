@@ -15,7 +15,6 @@ function App() {
   const [fetchProducts,setFetchProducts]=useState(true)
   const [fetchUser,setFetchUser]=useState(true)
   const API=useSelector(api)
-  console.log(API)
   const dispatch=useDispatch();
   useEffect(()=>{
     const data=localStorage.getItem('products')
@@ -25,7 +24,7 @@ function App() {
     }
     else{
       if(fetchProducts){
-        axios.get('/products').then(response=>{
+        axios.get(`${API}/products`).then(response=>{
           const data = response.data;
           console.log(data)
           localStorage.setItem('products',JSON.stringify(data))

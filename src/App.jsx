@@ -33,7 +33,7 @@ function App() {
         setFetchProducts(false)
       }
     }
-  },[dispatch,fetchProducts])
+  },[dispatch,fetchProducts,API])
 
   useEffect(()=>{
     const data=JSON.parse(localStorage.getItem('users'))

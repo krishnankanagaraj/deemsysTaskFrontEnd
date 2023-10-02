@@ -5,8 +5,8 @@ import CategoriesPage from './pages/CategoriesPage';
 import Footer from './components/Footer';
 import DrawerAppBar from './components/NavBar';
 import { useEffect, useState, } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchData,fetchUsers } from './slices/dataSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { api, fetchData,fetchUsers } from './slices/dataSlice';
 import axios from 'axios';
 import DesignGallery from './pages/DesignGallery';
 
@@ -14,6 +14,7 @@ import DesignGallery from './pages/DesignGallery';
 function App() {
   const [fetchProducts,setFetchProducts]=useState(true)
   const [fetchUser,setFetchUser]=useState(true)
+  const API=useSelector(api)
   const dispatch=useDispatch();
   useEffect(()=>{
     const data=localStorage.getItem('products')
@@ -23,7 +24,7 @@ function App() {
     }
     else{
       if(fetchProducts){
-        axios.get('http://localhost:5500/products').then(response=>{
+        axios.get('/products').then(response=>{
           const data = response.data;
           console.log(data)
           localStorage.setItem('products',JSON.stringify(data))

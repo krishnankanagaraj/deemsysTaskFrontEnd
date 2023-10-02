@@ -6,6 +6,7 @@ const initialState={
     loggedInUser:{},
     cart:[],
     orders:[],
+    api:'https://deemsystask.onrender.com/'
 }
 export const dataSlice=createSlice({
     name:'products',
@@ -39,4 +40,5 @@ export const isLogIn=(state)=>state.products.isLoggedIn
 export const currentUser=(state)=>state.products.loggedInUser
 export const cart=(state)=>state.products.cart
 export const orders=(state)=>state.products.orders
+export const api=(state)=>state.products.api
 export default dataSlice.reducer

@@ -1,56 +1,50 @@
-import { Dialog, Typography,Button, CardHeader, CardMedia, CardContent, CardActions, Rating, DialogActions } from '@mui/material'
+import { Dialog, Typography,Button, CardHeader, CardMedia, CardContent, CardActions, Rating, DialogActions,Card, DialogContent } from '@mui/material'
 import React, { useState } from 'react'
 import { ErrorOutline, ShoppingCartCheckout } from '@mui/icons-material'
-import { Card } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { cart, currentUser, isLogIn, setCart, setLoggedInUser } from '../slices/dataSlice';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { currentUser, isLogIn} from '../slices/dataSlice';
 import LoginDialog from './LoginDialog';
+import { apiAddCart } from '../api';
 
 function SingleItem({open,setOpen,product}) {
     const item=product
-    const cartItems=useSelector(cart)
     const[dialog,setDialog]=useState(false)
     const[feedback,setFeedBack]=useState(false)
     const isLoggedIn=useSelector(isLogIn)
     const user=useSelector(currentUser)
-    const dispatch=useDispatch();
-    const addToCart=(data)=>{
+    const addToCart= async(data)=>{
         if(isLoggedIn){
-            let index=cartItems.findIndex(item=>item._id===data._id)
-            if(index===-1){
-                console.log('item not in list')
-                axios.post(`https://deemsystask.onrender.com/addCart/${user.email}`,data,{headers:{"Content-Type":'application/json'}}).then(response=>{
-                    if(response){
-                        setOpen(false);
-                        axios.get(`https://deemsystask.onrender.com/users/${user.email}`).then(response=>{
-                            if(response){
-                                const user=response.data
-                                dispatch(setLoggedInUser(user))
-                                dispatch(setCart(user.cartItems))
-                            }
-                        })
-                    }
-                })
-            }
-            else{
-                setFeedBack(true)
-                setTimeout(()=>{
+            try{
+                const reponse=await apiAddCart(user.email,data)
+                if(reponse){
                     setFeedBack(false)
-                },1000)
+                    setOpen(false)
+                }
+                else{
+                    setFeedBack(true)
+                    setOpen(false)
+                    setTimeout(()=>{
+                        setFeedBack(false)
+                    },1000)
+                }
             }
-        }
+            catch(err){
+                console.log(err)
+                setOpen(false)
+            }
+        }  
         else{
             setDialog(true)
             setOpen(false)
         }
         }
-    
   return (
     <>
-    <Dialog open={open} sx={{padding:'10px'}} onClose={()=>{setOpen(false)}}>
-                
-            <Card >
+    <Dialog fullWidth={true}
+        maxWidth={'md'}
+         open={open} sx={{overflowY:'scroll'}} onClose={()=>{setOpen(false)}}>
+        <DialogContent>
+            <Card sx={{boxShadow:'0'}} >
             <CardHeader
                 title={item.title}
                 subheader={"Size: "+item.Size}
@@ -64,16 +58,16 @@ function SingleItem({open,setOpen,product}) {
                 sx={{padding:'10px'}}
             />
             <CardContent>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" textAlign={'justify'} component={'p'} color="text.secondary">
                 {item.description}
                 </Typography>
-                <div className='itemPrice' style={{display:'flex',gap:'10px',alignItems:'center'}}>
-                <div>
-                <Typography variant='subtitle1' component={'p'}>Reviews : </Typography>
+                <div className='itemPrice' style={{display:'flex',gap:'10px',alignItems:'center',}}>
+                <Typography sx={{marginLeft:{md:'auto'}}} variant='subtitle1' component={'p'}>Reviews : </Typography>
+                <div style={{display:'flex'}}>
                 <Rating precision={0.25} name="read-only" value={item.rating?.rate} readOnly />
                 <Typography>({item.rating?.count})</Typography>
                 </div>
-                <Typography sx={{marginLeft:{md:'auto',lg:'auto',sm:'auto',xs:'25px'},marginRight:'15px'}} variant='h6'>Price: <span style={{color:'crimson'}}>₹{item.price}</span></Typography>
+                <Typography sx={{marginInline:'auto'}} variant='h6'>Price: <span style={{color:'crimson'}}>₹{item.price}</span></Typography>
                 </div>
             </CardContent>
             <CardActions sx={{display:'flex',justifyContent:'center'}}>
@@ -85,11 +79,12 @@ function SingleItem({open,setOpen,product}) {
                
             </CardActions>
             </Card>
+        </DialogContent>   
     <DialogActions>
         <Button onClick={()=>setOpen(false)}>Close</Button>
     </DialogActions>
     </Dialog>
-    <Dialog open={feedback} onClose={()=>{setFeedBack(false)}}>
+    <Dialog fullWidth maxWidth={'sm'} open={feedback} onClose={()=>{setFeedBack(false)}}>
         <div style={{padding:'20px'}}>
         <Typography variant='h5' component={'h3'} sx={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',textAlign:'center'}}>
           <ErrorOutline sx={{fontSize:100,color:'crimson'}}></ErrorOutline>

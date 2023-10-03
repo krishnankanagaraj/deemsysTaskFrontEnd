@@ -83,7 +83,7 @@ function DrawerAppBar() {
             Home Interiors
             </div>
           </Typography>
-          <Box sx={{ display: { xs: 'none', md: 'flex' },paddingTop:'4.5px',justifyContent:'space-evenly',width:'76%', }} onClick={(e)=>{
+          <Box sx={{ display: { xs: 'none', md: 'flex' },paddingTop:'4.5px',justifyContent:'space-evenly',width:'79%', }} onClick={(e)=>{
             const value=e.target.value;
             if(value!=="login"&&value!==''&&value!==0&&value !==undefined){
               navigate(`/${value}`);
@@ -104,21 +104,21 @@ function DrawerAppBar() {
               }
               }} sx={{color:'white'}}>
             <Badge showZero color='success' badgeContent={cartItems.length}>    
-            <ShoppingCart  sx={{fontSize:'2rem'}}/>
+            <ShoppingCart  sx={{fontSize:'1.85rem'}}/>
             </Badge>
             </IconButton>
           {!isLoggedIn&& <Button sx={{marginLeft:'0'}} onClick={()=>{setDialogOpen(true);}} variant='contained' color='success'>Login</Button>}
           {isLoggedIn&&
-          <FormControl variant='standard' sx={{ml:'0',maxWidth:'70px',paddingTop:'10px'}}>
+          <FormControl variant='standard' sx={{paddingTop:'10px'}}>
           <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={LoggedInUser.name}
-          label={LoggedInUser.name}
+          value={LoggedInUser&&LoggedInUser.name}
+          label={LoggedInUser&&LoggedInUser.name}
           sx={{color:'white'}}
           >
-          <MenuItem value={LoggedInUser.name}>{LoggedInUser.name.toUpperCase()}</MenuItem>
-          <MenuItem onClick={()=>{console.log('call'); setOrdersDialog(true)}}>Orders</MenuItem>
+          <MenuItem value={LoggedInUser&&LoggedInUser.name}>{LoggedInUser&&LoggedInUser.name.toUpperCase()}</MenuItem>
+          <MenuItem onClick={()=>{setOrdersDialog(true)}}>Orders</MenuItem>
           <MenuItem ><Button variant='contained' color='error' onClick={()=>{
             dispatch(setIsloggedIn(false));
             dispatch(setLoggedInUser({}));
@@ -141,21 +141,21 @@ function DrawerAppBar() {
           }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 320,bgcolor:'crimson',color:'white' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width:{xs:300,sm:'50vw',md:450} ,bgcolor:'crimson',color:'white' },
           }}
         >
       <Box onClick={handleDrawerToggle} sx={{marginTop:'25px'}}>
       {isLoggedIn&&
-      <div>
-        <FormControl variant='standard' sx={{display:{md:'none'},marginLeft:'15px'}}>
+      <div style={{width:'100%',marginLeft:'auto'}}>
+        <FormControl variant='standard' sx={{display:{md:'none'},width:'95%',marginLeft:'15px',textAlign:'center'}}>
         <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={LoggedInUser.name}
-        label={LoggedInUser.name}
+        value={LoggedInUser&&LoggedInUser.name}
+        label={LoggedInUser&&LoggedInUser.name}
         sx={{color:'white'}}
         >
-        <MenuItem value={LoggedInUser.name}>{LoggedInUser.name.toUpperCase()}</MenuItem>
+        <MenuItem value={LoggedInUser&&LoggedInUser.name}>{LoggedInUser&&LoggedInUser.name.toUpperCase()}</MenuItem>
         <MenuItem onClick={()=>{setOrdersDialog(true)}} >Orders</MenuItem>
          </Select>
          </FormControl>
@@ -175,8 +175,7 @@ function DrawerAppBar() {
           </ListItem>
         ))}
       </List>
-      {!isLoggedIn&&<Button sx={{width:'95%',textAlign:'center',marginLeft:'2.5%'}} onClick={()=>{handleDrawerToggle();
-      setDialogOpen(true)}} variant='contained' color='success'>Login</Button>}
+      {!isLoggedIn&&<Button sx={{width:'95%',textAlign:'center',marginLeft:'2.5%'}} onClick={()=>{setDialogOpen(true)}} variant='contained' color='success'>Login</Button>}
       {isLoggedIn&&<Button sx={{width:'95%',textAlign:'center',marginLeft:'2.5%'}} variant='contained' color='success' onClick={()=>{
             dispatch(setIsloggedIn(false));
             dispatch(setLoggedInUser({}));

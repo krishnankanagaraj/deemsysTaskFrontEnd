@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Paper,Button,Typography } from '@mui/material'
-import axios from 'axios'
 import InputGroup from './InputGroup'
+import { apiEnquiry } from '../api'
 
 function EnquiryForm({xs,width}) {
     const [newEnquiry,setNewEnquiry]=useState({name:"",email:'',phone:''})
@@ -12,12 +12,12 @@ function EnquiryForm({xs,width}) {
     const inputHandler=(e)=>{
         setNewEnquiry({...newEnquiry,[e.target.name]:e.target.value})
         setFeedback('')
+        setNameErr('')
     }
     const nameValidation=()=>{
         const inputTrimmed=newEnquiry.name.trim()
         if(inputTrimmed.length<=3){
             setNameErr("Please Enter Your Name")
-            console.log(nameErr)
             return false
         }
         else{
@@ -41,7 +41,6 @@ function EnquiryForm({xs,width}) {
     const phoneValidation=()=>{
         const inputTrimmed=newEnquiry.phone.trim()
         if(inputTrimmed.length!==10){
-            console.log('phone')
             setPhoneErr('Phone Number Must be 10 Numbers')
             return false
         }
@@ -50,7 +49,7 @@ function EnquiryForm({xs,width}) {
             return true
         }
     }
-    const submitEnquiry=()=>{
+    const submitEnquiry=async ()=>{
         nameValidation();
         emailValidation();
         phoneValidation();
@@ -58,20 +57,19 @@ function EnquiryForm({xs,width}) {
         setEmailErr('');
         setNameErr('');
         setPhoneErr('');
-    axios.post('https://deemsystask.onrender.com/addEnquiry',newEnquiry,{headers: {'Content-Type': 'application/json',}})
-    .then((response)=>{
-      console.log( response)
-      if(response){
-             setNewEnquiry({name:'',email:'',phone:''})
-             setEmailErr('')
-             setNameErr('')
-             setPhoneErr('')
-             setFeedback("Enquiry Submitted. Get back To You soon!!!")
-             setTimeout(()=>{
-                setFeedback("")
-             },2000)
-      }
-    })
+        try{
+            const response = await apiEnquiry(newEnquiry);
+          if(response){
+                 setNewEnquiry({name:'',email:'',phone:''})
+                 setFeedback("Enquiry Submitted. Get back To You soon!!!")
+                 setTimeout(()=>{
+                    setFeedback("")
+                 },2000)
+          }
+        }
+        catch(err){
+            console.log(err)
+        }
     }
     else{
         setFeedback('')
@@ -80,7 +78,7 @@ function EnquiryForm({xs,width}) {
   return (
     <>
         <Paper sx={{display:{xs:xs,md:'flex'},marginInline:{md:'auto'},boxShadow:'0'}} style={{flexDirection:'column',justifyContent:"space-evenly",background:'white',gap:"10px",padding:'25px',borderRadius:'10px',width:width,maxWidth:'500px',height:"375px",marginBlock:'auto'}}>
-        <h4 style={{textAlign:'center'}}>Enquiry Form</h4>
+        <Typography variant='h5' component={'h3'} style={{textAlign:'center',color:'crimson'}}>Enquiry Form</Typography>
         <div style={{display:'flex',justifyContent:'space-evenly',flexDirection:'column'}}>
         <InputGroup label={'Enter Your Name'} error={nameErr} onChange={inputHandler} name={"name"} value={newEnquiry.name}/>
         <InputGroup label={'Enter Your Email Id'} error={emailErr} onChange={inputHandler} name={"email"} value={newEnquiry.email}/>

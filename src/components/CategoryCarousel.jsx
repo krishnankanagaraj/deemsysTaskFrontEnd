@@ -70,7 +70,7 @@ function CategoryCarousel({Category}) {
    <Carousel responsive={responsive} >
     {filteredProducts&&filteredProducts?.map((product,index)=>{
       return(
-        <ItemCard onClick={()=>{console.log('open');setProduct(product);setOpen(true)}} key={index} product={product}/>
+        <ItemCard onClick={()=>{setProduct(product);setOpen(true)}} key={index} product={product}/>
       )
     })}
    </Carousel>

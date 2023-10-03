@@ -24,7 +24,7 @@ function App() {
     }
     else{
       if(fetchProducts){
-        axios.get(`${API}/products`).then(response=>{
+        axios.get(`${API}products`).then(response=>{
           const data = response.data;
           console.log(data)
           localStorage.setItem('products',JSON.stringify(data))

@@ -1,48 +1,35 @@
 import {  Drawer, TableBody, TableCell, TableContainer, TableHead, TableRow ,Paper, IconButton, Typography,Button,Table, Dialog} from '@mui/material'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { cart, currentUser, setCart, setLoggedInUser, setOrders } from '../slices/dataSlice'
+import { useSelector } from 'react-redux'
+import { cart, currentUser} from '../slices/dataSlice'
 import { Delete, DoneAllOutlined} from '@mui/icons-material'
-import axios from 'axios'
+import { apiAddOrders, apiDeleteCart } from '../api'
 
 function CartDrawer({open,setOpen}) {
     const [order,setOrder]=useState(false)
-    const dispatch=useDispatch()
     const user=useSelector(currentUser)
     const cartItems=useSelector(cart)
-    const total=cartItems.reduce((acc,item)=>{
+    const total=cartItems&&cartItems.reduce((acc,item)=>{
         return acc+=(Number(item.price.split('/')[0]))*(Number(item.Size.split('*')[0])*Number(item.Size.split('*')[1]))
     },0)
-    const placeOrder=()=>{
-        axios.post(`https://deemsystask.onrender.com/addOrders/${user.email}`,{headers: {'Content-Type': 'application/json',}}).then(response=>{
+    const placeOrder=async ()=>{
+      const response=await apiAddOrders(user.email)
             if(response){
                     setOrder(true);
                     setOpen(false);
-                    axios.get(`https://deemsystask.onrender.com/users/${user.email}`).then(response=>{
-                        const data=response.data;
-                        dispatch(setLoggedInUser(data))
-                        dispatch(setCart(data.cartItems))
-                        dispatch(setOrders(data.orders))
-                    })
                     setTimeout(()=>{
                         setOrder(false)
                     },1000)
             }
-        })
     }
-    const removeCartItem=(e,data)=>{
+    const removeCartItem= async(e,data)=>{
         e.stopPropagation();
-        let newCart=cartItems.filter(item=>item._id!==data._id)
-        axios.post(`https://deemsystask.onrender.com/deleteCartItem/${user.email}`,newCart,{headers:{"Content-Type":'application/json'}}).then(response=>{
-            if(response){
-                axios.get(`https://deemsystask.onrender.com/users/${user.email}`).then(response=>{
-                        const data=response.data;
-                        dispatch(setLoggedInUser(data))
-                        dispatch(setCart(data.cartItems))
-                    })
-            }
-        })
-
+        try{
+          await apiDeleteCart(cartItems,user.email,data)
+        }
+        catch(err){
+          console.log(err)
+        }
     }
   return (
     <>
@@ -54,7 +41,7 @@ function CartDrawer({open,setOpen}) {
     ModalProps={{
     keepMounted: true, // Better open performance on mobile.
     }}
-    sx={{'& .MuiDrawer-paper': { boxSizing: 'border-box', width:{xs:'80vw',sm:'60vw',md:'40vw',lg:'40vw'} ,padding:'10px'},}}>
+    sx={{'& .MuiDrawer-paper': { boxSizing: 'border-box', width:{xs:300,sm:'50vw',md:450} ,padding:'10px'},}}>
     <Typography variant='h4' textAlign={'center'} fontWeight={'700'} component={'h4'}><span style={{color:'crimson',textTransform:'capitalize'}}> {user.name} </span>Your Cart</Typography>
     {cartItems.length===0&&
     <div style={{display:'flex',justifyContent:'center',flexDirection:'column',alignItems:'center',marginBlock:'auto'}}>
@@ -105,7 +92,7 @@ function CartDrawer({open,setOpen}) {
     </TableContainer>}
     {cartItems.length!==0&&<Button sx={{marginTop:'auto',marginBottom:'25px'}} variant='contained' color='success' onClick={placeOrder}>Proceed To Checkout</Button>}
     </Drawer>
-    <Dialog open={order} onClose={()=>{setOrder(false)}}>
+    <Dialog maxWidth={'sm'} fullWidth open={order} onClose={()=>{setOrder(false)}}>
         <div style={{padding:'20px'}}>
         <Typography variant='h5' component={'h3'} sx={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',textAlign:'center'}}>
           <DoneAllOutlined sx={{fontSize:100,color:'crimson'}}></DoneAllOutlined>

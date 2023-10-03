@@ -7,48 +7,27 @@ import DrawerAppBar from './components/NavBar';
 import { useEffect, useState, } from 'react';
 import DesignGallery from './pages/DesignGallery';
 import { apiFetchProducts } from './api';
+import { fetchData } from './slices/dataSlice';
+import { useDispatch } from 'react-redux';
 
 
 function App() {
   const [fetchProducts,setFetchProducts]=useState(true)
+  const dispatch=useDispatch();
   useEffect(()=>{
     if(fetchProducts){
-        console.log('app.jsx')
-        if(apiFetchProducts()){
-            console.log(apiFetchProducts())
-        }        
+        const data=localStorage.getItem('products')
+        if(data){
+          dispatch(fetchData(JSON.parse(data)))
+          setFetchProducts(false);
+        }
+        else{
+        apiFetchProducts()      
         setFetchProducts(false)
+        }
     }
-    
-    // const data=localStorage.getItem('products')
-    // if(data){
-    //   dispatch(fetchData(JSON.parse(data)))
-    //   setFetchProducts(false);
-    // }
-    // else{
-    //   if(fetchProducts){
-    //     axios.get(`https://deemsystask.onrender.com/products`).then(response=>{
-    //       const data = response.data;
-    //       console.log(data)
-    //       localStorage.setItem('products',JSON.stringify(data))
-    //       dispatch(fetchData(data))
-    //     })
-    //     setFetchProducts(false)
-    //   }
-    // }
-  },[fetchProducts])
+  },[fetchProducts,dispatch])
 
-  // useEffect(()=>{
-  //   const data=JSON.parse(localStorage.getItem('users'))
-  //   if(data){
-  //     dispatch(fetchUsers(data))
-  //     setFetchUser(false)
-  //   }
-  //   else{
-  //       setFetchUser(false)
-  //   }
-
-  // },[dispatch,fetchUser])
   
   return (
     <>

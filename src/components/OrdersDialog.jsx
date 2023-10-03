@@ -1,4 +1,4 @@
-import { Dialog, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Paper, DialogActions, Button } from '@mui/material'
+import { Dialog, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Paper } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { currentUser,  orders } from '../slices/dataSlice'
@@ -11,10 +11,10 @@ function OrdersDialog({open,setOpen}) {
     },0)
   return (
     <>
-    <Dialog open={open} onClose={()=>setOpen(false)}>
+    <Dialog maxWidth={'sm'} fullWidth open={open} onClose={()=>setOpen(false)}>
     <Typography variant='h4' textAlign={'center'} fontWeight={'700'} component={'h4'} sx={{marginBlock:'15px'}}><span style={{color:'crimson',textTransform:'capitalize'}}> {user.name} </span>Your orders</Typography>
-    {!orderItems&&<Typography textAlign={'center'} component={'h5'} variant="h5" sx={{marginBlock:'auto'}}>No Orders Yet</Typography>}
-    {orderItems&&<TableContainer sx={{paddingInline:'15px',boxShadow:'0'}} component={Paper}>
+    {orderItems.length===0&&<Typography textAlign={'center'} component={'h5'} variant="h5" sx={{paddingBlock:'10%',marginBlock:'auto'}}>No Orders Yet</Typography>}
+    {orderItems.length>0&&<TableContainer sx={{paddingInline:'15px',boxShadow:'0'}} component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -51,9 +51,6 @@ function OrdersDialog({open,setOpen}) {
         </TableBody>
       </Table>
     </TableContainer>}
-    <DialogActions>
-        <Button onClick={()=>setOpen(false)}>Close</Button>
-    </DialogActions>
     </Dialog>
     </>
 

@@ -1,7 +1,7 @@
 import { Button, Dialog, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import InputGroup from './InputGroup'
-import axios from 'axios'
+import { apiSignup } from '../api'
 
 function SignupDialog({open,setOpen}) {
     const[newEntry,setNewEntry]=useState({name:'',email:'',password:'',orders:[],cartItems:[],phone:''})
@@ -13,7 +13,6 @@ function SignupDialog({open,setOpen}) {
     const inputHandler=(e)=>{
         setNewEntry({...newEntry,[e.target.name]:e.target.value})
         setFeedBack('')
-        console.log(newEntry)
     }
     const formValidation=(type,input)=>{
         const inputTrimmed= input.trim()
@@ -29,7 +28,6 @@ function SignupDialog({open,setOpen}) {
         }
         if(type==='email'){
             if(!inputTrimmed.length>=3||!inputTrimmed.includes('@')){
-                console.log('call')
                 setEmailErr('Please Enter a Valid Email')
                 return false
             }
@@ -59,48 +57,42 @@ function SignupDialog({open,setOpen}) {
             }
         }
     }
-    const submitForm=()=>{
+    const submitForm= async()=>{
         formValidation("name",newEntry.name)
         formValidation('email',newEntry.email)
         formValidation('phone',newEntry.phone)
         formValidation('password',newEntry.password)
         if(formValidation("name",newEntry.name)&&formValidation('email',newEntry.email)&&formValidation('phone',newEntry.phone)&&formValidation('password',newEntry.password)){
-            axios.get('https://deemsystask.onrender.com/users').then(response=>{
+            try{
+                const response=await apiSignup(newEntry);
                 if(response){
-                    const users=response.data;
-                    let index=users.findIndex(user=>user.email===newEntry.email);
-                    console.log(index)
-                    if(index===-1){
-                        axios.post('https://deemsystask.onrender.com/addUser',newEntry,{headers: {'Content-Type': 'application/json',}})
-                        .then((response)=>{
-                        if(response){
-                            console.log(newEntry)
-                            setFeedBack('You can Now Login with Your Email and Password')
-                            setNewEntry({name:'',email:'',cartItems:[],password:'',phone:'',orders:[]})
-                            setTimeout(()=>{setOpen(false);setFeedBack('')},2000)
-                        }})
-                    }
-                    else{
-                        setFeedBack('Email Id Registered with Us')
-                    }
+                    setFeedBack('You can Now Login with Your Email and Password')
+                    setNewEntry({name:'',email:'',cartItems:[],password:'',phone:'',orders:[]})
+                    setTimeout(()=>{setOpen(false);setFeedBack('')},2000)
                 }
-            })
-       
+                else{
+                    setFeedBack('Email Id Registered with Us')
+                }
+            }
+            catch(err){
+                console.log(err)
+            }
+            
            
         }
     }
   return (
     <>
-    <Dialog fullWidth style={{padding:'25px',maxWidth:'700px',minWidth:'100vw'}} open={open} onClose={()=>setOpen(false)}>
+    <Dialog fullWidth maxWidth={'sm'} style={{padding:'10px'}} open={open} onClose={()=>{setOpen(false);setNewEntry({name:'',email:'',password:'',orders:[],cartItems:[],phone:''})}}>
+        <Typography variant='h5' component={'p'} textAlign={'center'} sx={{marginTop:'10px',color:'crimson'}}>Sign Up Form</Typography>
     <div style={{display:'flex',justifyContent:'space-evenly',flexDirection:'column',padding:'25px', width:'100%'}}>
         <InputGroup label={'Enter Your Name'} name={"name"} onChange={inputHandler} error={nameErr} value={newEntry.name}/>
         <InputGroup label={'Enter Your Email'} name={"email"} onChange={inputHandler} error={emailErr} value={newEntry.email} />
         <InputGroup label={'Enter Your Phone Number'} name={"phone"} onChange={inputHandler} error={phoneErr} value={newEntry.phone}/>
         <InputGroup type='password' label={'Enter Your password'} name={"password"} onChange={inputHandler} error={passwordErr} value={newEntry.password}/>
-        <Button onClick={submitForm}  variant="outlined" color='error' sx={{width:'100%',marginTop:"15px"}}>Sign Up</Button>
-        {feedback&&<Typography color={'error'}>{feedback}</Typography>}
+        <Button onClick={submitForm}  variant="outlined" color='success' sx={{width:'100%',marginTop:"15px"}}>Sign Up</Button>
+        {feedback&&<Typography textAlign={"center"} sx={{marginTop:'15px'}} color={'error'}>{feedback}</Typography>}
         </div>
-
     </Dialog>
     </>
   )

@@ -20,10 +20,10 @@ function SingleItem({open,setOpen,product}) {
             let index=cartItems.findIndex(item=>item._id===data._id)
             if(index===-1){
                 console.log('item not in list')
-                axios.post(`http://localhost:5500/addCart/${user.email}`,data,{headers:{"Content-Type":'application/json'}}).then(response=>{
+                axios.post(`https://deemsystask.onrender.com/addCart/${user.email}`,data,{headers:{"Content-Type":'application/json'}}).then(response=>{
                     if(response){
                         setOpen(false);
-                        axios.get(`http://localhost:5500/users/${user.email}`).then(response=>{
+                        axios.get(`https://deemsystask.onrender.com/users/${user.email}`).then(response=>{
                             if(response){
                                 const user=response.data
                                 dispatch(setLoggedInUser(user))

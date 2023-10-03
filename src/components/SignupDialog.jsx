@@ -65,13 +65,13 @@ function SignupDialog({open,setOpen}) {
         formValidation('phone',newEntry.phone)
         formValidation('password',newEntry.password)
         if(formValidation("name",newEntry.name)&&formValidation('email',newEntry.email)&&formValidation('phone',newEntry.phone)&&formValidation('password',newEntry.password)){
-            axios.get('http://localhost:5500/users').then(response=>{
+            axios.get('https://deemsystask.onrender.com/users').then(response=>{
                 if(response){
                     const users=response.data;
                     let index=users.findIndex(user=>user.email===newEntry.email);
                     console.log(index)
                     if(index===-1){
-                        axios.post('http://localhost:5500/addUser',newEntry,{headers: {'Content-Type': 'application/json',}})
+                        axios.post('https://deemsystask.onrender.com/addUser',newEntry,{headers: {'Content-Type': 'application/json',}})
                         .then((response)=>{
                         if(response){
                             console.log(newEntry)

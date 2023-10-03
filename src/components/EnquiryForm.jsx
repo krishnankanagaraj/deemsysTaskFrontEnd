@@ -55,7 +55,7 @@ function EnquiryForm({xs,width}) {
         emailValidation();
         phoneValidation();
     if(nameValidation()&&emailValidation()&&phoneValidation()){  
-    axios.post('http://localhost:5500/addEnquiry',newEnquiry,{headers: {'Content-Type': 'application/json',}})
+    axios.post('https://deemsystask.onrender.com/addEnquiry',newEnquiry,{headers: {'Content-Type': 'application/json',}})
     .then((response)=>{
       console.log( response)
       if(response){

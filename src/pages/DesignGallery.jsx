@@ -88,4 +88,4 @@ function DesignGallery() {
   )
 }
 
-export default DesignGallery
+export default React.memo(DesignGallery)

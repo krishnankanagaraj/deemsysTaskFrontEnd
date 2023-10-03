@@ -14,11 +14,11 @@ function CartDrawer({open,setOpen}) {
         return acc+=(Number(item.price.split('/')[0]))*(Number(item.Size.split('*')[0])*Number(item.Size.split('*')[1]))
     },0)
     const placeOrder=()=>{
-        axios.post(`http://localhost:5500/addOrders/${user.email}`,{headers: {'Content-Type': 'application/json',}}).then(response=>{
+        axios.post(`https://deemsystask.onrender.com/addOrders/${user.email}`,{headers: {'Content-Type': 'application/json',}}).then(response=>{
             if(response){
                     setOrder(true);
                     setOpen(false);
-                    axios.get(`http://localhost:5500/users/${user.email}`).then(response=>{
+                    axios.get(`https://deemsystask.onrender.com/users/${user.email}`).then(response=>{
                         const data=response.data;
                         dispatch(setLoggedInUser(data))
                         dispatch(setCart(data.cartItems))
@@ -33,9 +33,9 @@ function CartDrawer({open,setOpen}) {
     const removeCartItem=(e,data)=>{
         e.stopPropagation();
         let newCart=cartItems.filter(item=>item._id!==data._id)
-        axios.post(`http://localhost:5500/deleteCartItem/${user.email}`,newCart,{headers:{"Content-Type":'application/json'}}).then(response=>{
+        axios.post(`https://deemsystask.onrender.com/deleteCartItem/${user.email}`,newCart,{headers:{"Content-Type":'application/json'}}).then(response=>{
             if(response){
-                axios.get(`http://localhost:5500/users/${user.email}`).then(response=>{
+                axios.get(`https://deemsystask.onrender.com/users/${user.email}`).then(response=>{
                         const data=response.data;
                         dispatch(setLoggedInUser(data))
                         dispatch(setCart(data.cartItems))
@@ -97,9 +97,12 @@ function CartDrawer({open,setOpen}) {
     {cartItems.length!==0&&<Button sx={{marginTop:'auto',marginBottom:'25px'}} variant='contained' color='success' onClick={placeOrder}>Proceed To Checkout</Button>}
     </Drawer>
     <Dialog open={order} onClose={()=>{setOrder(false)}}>
+        <div style={{padding:'20px'}}>
         <Typography variant='h3' component={'h3'}>
             Order Placed Sucessfully
         </Typography>
+        </div>
+   
     </Dialog>
     </>
   )

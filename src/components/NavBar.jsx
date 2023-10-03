@@ -164,7 +164,8 @@ function DrawerAppBar() {
       }
       <List onClick={(e)=>{
             const value=e.target.innerText.split(' ').join('').toLowerCase();
-            value!=="login"&&navigate(`/${value}`)
+            value!=="login"&&value.length<20&&navigate(`/${value}`);
+            window.scrollTo(0,0)
             }}>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>

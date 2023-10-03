@@ -76,7 +76,7 @@ function SignupDialog({open,setOpen}) {
                         if(response){
                             console.log(newEntry)
                             setFeedBack('You can Now Login with Your Email and Password')
-                            setNewEntry({name:'',email:'',cartItems:[],password:'',phone:'',order:[]})
+                            setNewEntry({name:'',email:'',cartItems:[],password:'',phone:'',orders:[]})
                             setTimeout(()=>{setOpen(false);setFeedBack('')},2000)
                         }})
                     }

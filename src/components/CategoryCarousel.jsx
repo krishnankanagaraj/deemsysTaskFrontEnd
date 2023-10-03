@@ -46,7 +46,7 @@ function CategoryCarousel({Category}) {
   return (
 <>   
   <div style={{paddingLeft:"25px"}}>
-    <Typography variant='h2' component={"h2"}>{Category}</Typography>
+    <Typography variant='h4' component={"h2"}>{Category}</Typography>
     {filteredProducts.length===0&&<Carousel responsive={responsive}>
     <Stack spacing={3} sx={{marginInline:'25px'}}>
       <Skeleton variant="rectangular" width={210} height={210} />

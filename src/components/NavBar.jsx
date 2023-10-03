@@ -47,7 +47,7 @@ function DrawerAppBar() {
       <AppBar component="nav" sx={{background:'crimson'}} >
         <Toolbar>
         <Typography variant="h6" sx={{ my: 2, display:{md:"none"},cursor:'pointer'}} onClick={()=>{navigate('/');window.scrollTo(0,0)}}>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'5px',marginLeft:'25px'}}>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'5px',marginLeft:'22px'}}>
             <DeveloperBoardIcon/>
             Home Interiors
             </div>
@@ -58,7 +58,7 @@ function DrawerAppBar() {
               }
               else{
                 setDialogOpen(true)
-              }}} sx={{ my: 2, display:{md:"none"},color:'white',marginLeft:'auto'}}>
+              }}} sx={{ my: 1, display:{md:"none"},color:'white',marginLeft:'auto'}}>
         <Badge showZero color='success' badgeContent={cartItems.length}>
         <ShoppingCart sx={{fontSize:'2rem'}}></ShoppingCart>
         </Badge>
@@ -83,7 +83,7 @@ function DrawerAppBar() {
             Home Interiors
             </div>
           </Typography>
-          <Box sx={{ display: { xs: 'none', md: 'flex' },paddingTop:'4.5px',justifyContent:'space-evenly',width:'75%', }} onClick={(e)=>{
+          <Box sx={{ display: { xs: 'none', md: 'flex' },paddingTop:'4.5px',justifyContent:'space-evenly',width:'76%', }} onClick={(e)=>{
             const value=e.target.value;
             if(value!=="login"&&value!==''&&value!==0&&value !==undefined){
               navigate(`/${value}`);

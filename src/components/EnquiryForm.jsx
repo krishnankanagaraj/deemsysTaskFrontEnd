@@ -55,32 +55,31 @@ function EnquiryForm({xs,width}) {
         emailValidation();
         phoneValidation();
     if(nameValidation()&&emailValidation()&&phoneValidation()){  
+        setEmailErr('');
+        setNameErr('');
+        setPhoneErr('');
     axios.post('https://deemsystask.onrender.com/addEnquiry',newEnquiry,{headers: {'Content-Type': 'application/json',}})
     .then((response)=>{
       console.log( response)
       if(response){
-          setTimeout(()=>{
-             setFeedback("")
              setNewEnquiry({name:'',email:'',phone:''})
              setEmailErr('')
              setNameErr('')
              setPhoneErr('')
-         },2000)
-      }
-      else{
-
+             setFeedback("Enquiry Submitted. Get back To You soon!!!")
+             setTimeout(()=>{
+                setFeedback("")
+             },2000)
       }
     })
-     setFeedback("Enquiry Submitted. Get back To You soon!!!")
     }
     else{
-        setFeedback(false)
+        setFeedback('')
     }
     }
   return (
     <>
-        <Paper sx={{display:{xs:xs,md:'flex'}}} style={{flexDirection:'column',justifyContent:"space-evenly",background:'white',gap:"10px",padding:'25px',borderRadius:'10px',width:width,
-        minHeight:'65%',height:"max-content",marginInline:"auto",marginBlock:'auto'}}>
+        <Paper sx={{display:{xs:xs,md:'flex'},marginInline:{md:'auto'},boxShadow:'0'}} style={{flexDirection:'column',justifyContent:"space-evenly",background:'white',gap:"10px",padding:'25px',borderRadius:'10px',width:width,maxWidth:'500px',height:"375px",marginBlock:'auto'}}>
         <h4 style={{textAlign:'center'}}>Enquiry Form</h4>
         <div style={{display:'flex',justifyContent:'space-evenly',flexDirection:'column'}}>
         <InputGroup label={'Enter Your Name'} error={nameErr} onChange={inputHandler} name={"name"} value={newEnquiry.name}/>

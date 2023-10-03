@@ -2,7 +2,7 @@ import {  Drawer, TableBody, TableCell, TableContainer, TableHead, TableRow ,Pap
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { cart, currentUser, setCart, setLoggedInUser, setOrders } from '../slices/dataSlice'
-import { Delete } from '@mui/icons-material'
+import { Delete, DoneAllOutlined} from '@mui/icons-material'
 import axios from 'axios'
 
 function CartDrawer({open,setOpen}) {
@@ -54,42 +54,51 @@ function CartDrawer({open,setOpen}) {
     ModalProps={{
     keepMounted: true, // Better open performance on mobile.
     }}
-    sx={{'& .MuiDrawer-paper': { boxSizing: 'border-box', width:{xs:'80vw',sm:'60vw',md:'40vw',lg:'40vw'},bgcolor:'crimson',color:'white' ,padding:'10px'},}}>
-    <Typography variant='h4' textAlign={'center'} fontWeight={'700'} component={'h4'}><span style={{color:'#333',textTransform:'capitalize'}}> {user.name} </span>Your Cart</Typography>
-    {cartItems.length===0&&<Typography textAlign={'center'} component={'h5'} variant="h5" sx={{marginBlock:'auto'}}>Your Cart is Empty</Typography>}
-    {cartItems.length!==0&&<TableContainer component={Paper}>
+    sx={{'& .MuiDrawer-paper': { boxSizing: 'border-box', width:{xs:'80vw',sm:'60vw',md:'40vw',lg:'40vw'} ,padding:'10px'},}}>
+    <Typography variant='h4' textAlign={'center'} fontWeight={'700'} component={'h4'}><span style={{color:'crimson',textTransform:'capitalize'}}> {user.name} </span>Your Cart</Typography>
+    {cartItems.length===0&&
+    <div style={{display:'flex',justifyContent:'center',flexDirection:'column',alignItems:'center',marginBlock:'auto'}}>
+      <img src='/empty-cart.png' style={{width:'30%',marginBlock:'10px'}} alt='empty cart'/>
+    <Typography component={'h5'} variant="h5">Your Cart is Empty</Typography>
+    </div>}
+    {cartItems.length!==0&&<TableContainer sx={{paddingInline:'15px'}} component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
             <TableCell align="right">Size</TableCell>
-            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Rate</TableCell>
+            <TableCell align='right'>Price</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {cartItems.map((item,index) => (
-            <TableRow
-              key={index}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {item.title}
-              </TableCell>
-              <TableCell align="right">{item.Size}</TableCell>
-              <TableCell align="right">{item.price}</TableCell>
-              <TableCell align="right">
-                <IconButton>
-                    <Delete onClick={(e)=>{removeCartItem(e,item)}} sx={{fontSize:30}}></Delete>
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+          {cartItems.map((item,index) => {
+            const orderValue=(Number(item.price.split('/')[0]))*(Number(item.Size.split('*')[0])*Number(item.Size.split('*')[1]));
+            return(
+              <TableRow
+                key={index}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {item.title}
+                </TableCell>
+                <TableCell align="right">{item.Size}</TableCell>
+                <TableCell align="right">{item.price}</TableCell>
+                <TableCell align="right">{orderValue}</TableCell>
+                <TableCell align="right">
+                  <IconButton onClick={(e)=>{removeCartItem(e,item)}} >
+                      <Delete sx={{fontSize:30}}></Delete>
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            )
+          })}
           <TableRow>
             <TableCell></TableCell>
             <TableCell></TableCell>
-            <TableCell>Total</TableCell>
-            <TableCell>{total}</TableCell>
+            <TableCell align='right'>Total</TableCell>
+            <TableCell align='right'>{total}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -98,8 +107,9 @@ function CartDrawer({open,setOpen}) {
     </Drawer>
     <Dialog open={order} onClose={()=>{setOrder(false)}}>
         <div style={{padding:'20px'}}>
-        <Typography variant='h3' component={'h3'}>
-            Order Placed Sucessfully
+        <Typography variant='h5' component={'h3'} sx={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',textAlign:'center'}}>
+          <DoneAllOutlined sx={{fontSize:100,color:'crimson'}}></DoneAllOutlined>
+            <span>Order Placed Sucessfully</span>
         </Typography>
         </div>
    

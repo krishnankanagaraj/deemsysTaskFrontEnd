@@ -8,8 +8,8 @@ import { Container } from '@mui/material';
 function Faq() {
   return (
     <>
-    <Container maxWidth={'lg'} sx={{marginBlock:'25px',paddingTop:'25px'}}>
-      <Typography variant='h2' component={'h2'}>
+    <Container maxWidth={'md'} sx={{marginBlock:'25px',paddingTop:'25px'}}>
+      <Typography sx={{marginBottom:'15px'}} variant='h4' component={'h2'}>
         Frequently Asked Questions
       </Typography>
       <div>

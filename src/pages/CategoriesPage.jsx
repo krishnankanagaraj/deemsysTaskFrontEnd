@@ -44,7 +44,7 @@ function CategoriesPage() {
     <LoadingSkeleton></LoadingSkeleton>}
     {filteredProducts&&filteredProducts.map((product,index)=>{
       return(
-      <Cards onClick={()=>{setOpenItem(true);setSelectedItem(product)}} index={index} product={product}></Cards>
+      <Cards key={index} onClick={()=>{setOpenItem(true);setSelectedItem(product)}} index={index} product={product}></Cards>
       )
     })}
     </Grid>

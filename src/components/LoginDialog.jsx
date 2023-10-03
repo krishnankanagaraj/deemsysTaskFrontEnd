@@ -17,7 +17,6 @@ function LoginDialog({open,setOpen}) {
     const inputHandler=(e)=>{
         setNewEntry({...newEntry,[e.target.name]:e.target.value})
         setUserErr('')
-        console.log(newEntry)
     }
     const emailValidation=()=>{
         if(!newEntry.email.includes('@')){

@@ -22,7 +22,7 @@ function HomePage() {
       <Typography variant='h3' sx={{color:'crimson'}} component={'h5'}>
         Contact Us
       </Typography>
-      <EnquiryForm xs='' width='50%'></EnquiryForm>
+      <EnquiryForm width='95%'></EnquiryForm>
     </div>
     <Faq></Faq>
     </>

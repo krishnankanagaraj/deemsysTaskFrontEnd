@@ -1,6 +1,6 @@
 import { Dialog, Typography,Button, CardHeader, CardMedia, CardContent, CardActions, Rating, DialogActions } from '@mui/material'
 import React, { useState } from 'react'
-import { ShoppingCartCheckout } from '@mui/icons-material'
+import { ErrorOutline, ShoppingCartCheckout } from '@mui/icons-material'
 import { Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { cart, currentUser, isLogIn, setCart, setLoggedInUser } from '../slices/dataSlice';
@@ -89,10 +89,14 @@ function SingleItem({open,setOpen,product}) {
         <Button onClick={()=>setOpen(false)}>Close</Button>
     </DialogActions>
     </Dialog>
-    <Dialog open={feedback} onClose={setFeedBack}>
-        <Typography variant='h3'>
-            Item already in Your Cart
+    <Dialog open={feedback} onClose={()=>{setFeedBack(false)}}>
+        <div style={{padding:'20px'}}>
+        <Typography variant='h5' component={'h3'} sx={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',textAlign:'center'}}>
+          <ErrorOutline sx={{fontSize:100,color:'crimson'}}></ErrorOutline>
+            <span>Item Already in Cart</span>
         </Typography>
+        </div>
+   
     </Dialog>
     <LoginDialog open={dialog} setOpen={setDialog} ></LoginDialog>
     </>

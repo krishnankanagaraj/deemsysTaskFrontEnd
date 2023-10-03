@@ -12,13 +12,13 @@ function OrdersDialog({open,setOpen}) {
   return (
     <>
     <Dialog open={open} onClose={()=>setOpen(false)}>
-    <Typography variant='h4' textAlign={'center'} fontWeight={'700'} component={'h4'}><span style={{color:'#333',textTransform:'capitalize'}}> {user.name} </span>Your orders</Typography>
+    <Typography variant='h4' textAlign={'center'} fontWeight={'700'} component={'h4'} sx={{marginBlock:'15px'}}><span style={{color:'crimson',textTransform:'capitalize'}}> {user.name} </span>Your orders</Typography>
     {!orderItems&&<Typography textAlign={'center'} component={'h5'} variant="h5" sx={{marginBlock:'auto'}}>No Orders Yet</Typography>}
-    {orderItems&&<TableContainer component={Paper}>
+    {orderItems&&<TableContainer sx={{paddingInline:'15px',boxShadow:'0'}} component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Title</TableCell>
+            <TableCell >Title</TableCell>
             <TableCell align="right">Size</TableCell>
             <TableCell align="right">Price</TableCell>
             <TableCell align="right">Order Value</TableCell>

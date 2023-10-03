@@ -12,6 +12,7 @@ export const dataSlice=createSlice({
     initialState,
     reducers:{
         fetchData:(state,action)=>{
+            console.log('redux')
             state.allProducts=action.payload
         },
         fetchUsers:(state,action)=>{

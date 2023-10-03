@@ -5,46 +5,50 @@ import CategoriesPage from './pages/CategoriesPage';
 import Footer from './components/Footer';
 import DrawerAppBar from './components/NavBar';
 import { useEffect, useState, } from 'react';
-import { useDispatch} from 'react-redux';
-import { fetchData,fetchUsers } from './slices/dataSlice';
-import axios from 'axios';
 import DesignGallery from './pages/DesignGallery';
+import { apiFetchProducts } from './api';
 
 
 function App() {
   const [fetchProducts,setFetchProducts]=useState(true)
-  const [fetchUser,setFetchUser]=useState(true)
-  const dispatch=useDispatch();
   useEffect(()=>{
-    const data=localStorage.getItem('products')
-    if(data){
-      dispatch(fetchData(JSON.parse(data)))
-      setFetchProducts(false);
-    }
-    else{
-      if(fetchProducts){
-        axios.get(`https://deemsystask.onrender.com/products`).then(response=>{
-          const data = response.data;
-          console.log(data)
-          localStorage.setItem('products',JSON.stringify(data))
-          dispatch(fetchData(data))
-        })
+    if(fetchProducts){
+        console.log('app.jsx')
+        if(apiFetchProducts()){
+            console.log(apiFetchProducts())
+        }        
         setFetchProducts(false)
-      }
     }
-  },[dispatch,fetchProducts])
+    
+    // const data=localStorage.getItem('products')
+    // if(data){
+    //   dispatch(fetchData(JSON.parse(data)))
+    //   setFetchProducts(false);
+    // }
+    // else{
+    //   if(fetchProducts){
+    //     axios.get(`https://deemsystask.onrender.com/products`).then(response=>{
+    //       const data = response.data;
+    //       console.log(data)
+    //       localStorage.setItem('products',JSON.stringify(data))
+    //       dispatch(fetchData(data))
+    //     })
+    //     setFetchProducts(false)
+    //   }
+    // }
+  },[fetchProducts])
 
-  useEffect(()=>{
-    const data=JSON.parse(localStorage.getItem('users'))
-    if(data){
-      dispatch(fetchUsers(data))
-      setFetchUser(false)
-    }
-    else{
-        setFetchUser(false)
-    }
+  // useEffect(()=>{
+  //   const data=JSON.parse(localStorage.getItem('users'))
+  //   if(data){
+  //     dispatch(fetchUsers(data))
+  //     setFetchUser(false)
+  //   }
+  //   else{
+  //       setFetchUser(false)
+  //   }
 
-  },[dispatch,fetchUser])
+  // },[dispatch,fetchUser])
   
   return (
     <>

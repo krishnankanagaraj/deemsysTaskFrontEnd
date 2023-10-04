@@ -56,7 +56,7 @@ function LoginDialog({open,setOpen}) {
     }
   return (
     <>
-    <Dialog fullWidth maxWidth={'sm'} open={open} onClose={()=>{setOpen(false); setNewEntry({email:'',password:''})}}>
+    <Dialog fullWidth maxWidth={'sm'} open={open} onClose={()=>{setOpen(false);setUserErr(''); setNewEntry({email:'',password:''})}}>
         <div style={{display:'flex',justifyContent:'space-evenly',flexDirection:'column',padding:'25px', width:'100%',minHeight:'400px'}}>
         <InputGroup label={'Enter Your Email'} name={"email"} onChange={inputHandler} error={emailErr} value={newEntry.email} />
         <InputGroup type={'password'} label={'Enter Your password'} name={"password"} onChange={inputHandler} error={passwordErr} value={newEntry.password}/>

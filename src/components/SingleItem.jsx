@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 import { currentUser, isLogIn} from '../slices/dataSlice';
 import LoginDialog from './LoginDialog';
 import { apiAddCart } from '../api';
+import { LoadingButton } from '@mui/lab';
 
 function SingleItem({open,setOpen,product}) {
     const item=product
     const[dialog,setDialog]=useState(false)
     const[feedback,setFeedBack]=useState(false)
+    const [loading,setLoading]=useState(false);
     const isLoggedIn=useSelector(isLogIn)
     const user=useSelector(currentUser)
     const addToCart= async(data)=>{
@@ -19,6 +21,7 @@ function SingleItem({open,setOpen,product}) {
                 if(reponse){
                     setFeedBack(false)
                     setOpen(false)
+                    setLoading(false);
                 }
                 else{
                     setFeedBack(true)
@@ -71,11 +74,14 @@ function SingleItem({open,setOpen,product}) {
                 </div>
             </CardContent>
             <CardActions sx={{display:'flex',justifyContent:'center'}}>
-                <Button onClick={()=>{addToCart(item)}} sx={{display:'flex',alignItems:'center',fontSize:'1rem'}} variant='contained' color='success'>
-                
+                {/* <Button onClick={()=>{addToCart(item)}} sx={{display:'flex',alignItems:'center',fontSize:'1rem'}} variant='contained' color='success'>
                 <ShoppingCartCheckout sx={{fontSize:30,color:'white'}}></ShoppingCartCheckout>
                 Add to Cart
-                </Button>
+                </Button> */}
+                <LoadingButton loading={loading} onClick={()=>{addToCart(item);isLoggedIn&&setLoading(true)}} sx={{display:'flex',alignItems:'center',fontSize:'1rem'}} variant='contained' color='success' >
+                <ShoppingCartCheckout sx={{fontSize:30,color:'white'}}></ShoppingCartCheckout>
+                Add to Cart
+                </LoadingButton>
                
             </CardActions>
             </Card>

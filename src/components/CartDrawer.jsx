@@ -1,22 +1,27 @@
-import {  Drawer, TableBody, TableCell, TableContainer, TableHead, TableRow ,Paper, IconButton, Typography,Button,Table, Dialog} from '@mui/material'
+import {  Drawer, TableBody, TableCell, TableContainer, TableHead, TableRow ,Paper, Typography,Table, Dialog} from '@mui/material'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { cart, currentUser} from '../slices/dataSlice'
 import { Delete, DoneAllOutlined} from '@mui/icons-material'
 import { apiAddOrders, apiDeleteCart } from '../api'
+import { LoadingButton } from '@mui/lab'
 
 function CartDrawer({open,setOpen}) {
     const [order,setOrder]=useState(false)
     const user=useSelector(currentUser)
     const cartItems=useSelector(cart)
+    const [loading,setLoading]=useState(false)
+    const [orderLoading,setOrderLoading]=useState(false);
     const total=cartItems&&cartItems.reduce((acc,item)=>{
         return acc+=(Number(item.price.split('/')[0]))*(Number(item.Size.split('*')[0])*Number(item.Size.split('*')[1]))
     },0)
     const placeOrder=async ()=>{
+      setOrderLoading(true)
       const response=await apiAddOrders(user.email)
             if(response){
                     setOrder(true);
                     setOpen(false);
+                    setOrderLoading(false)
                     setTimeout(()=>{
                         setOrder(false)
                     },1000)
@@ -25,7 +30,11 @@ function CartDrawer({open,setOpen}) {
     const removeCartItem= async(e,data)=>{
         e.stopPropagation();
         try{
-          await apiDeleteCart(cartItems,user.email,data)
+         const response= await apiDeleteCart(cartItems,user.email,data)
+         if(response){
+          setLoading(false)
+         }
+
         }
         catch(err){
           console.log(err)
@@ -74,9 +83,9 @@ function CartDrawer({open,setOpen}) {
                 <TableCell align="right">{item.price}</TableCell>
                 <TableCell align="right">{orderValue}</TableCell>
                 <TableCell align="right">
-                  <IconButton onClick={(e)=>{removeCartItem(e,item)}} >
+                  <LoadingButton variant='text' color='error' loading={loading}  onClick={(e)=>{removeCartItem(e,item);setLoading(true)}} >
                       <Delete sx={{fontSize:30}}></Delete>
-                  </IconButton>
+                  </LoadingButton>
                 </TableCell>
               </TableRow>
             )
@@ -90,7 +99,7 @@ function CartDrawer({open,setOpen}) {
         </TableBody>
       </Table>
     </TableContainer>}
-    {cartItems.length!==0&&<Button sx={{marginTop:'auto',marginBottom:'25px'}} variant='contained' color='success' onClick={placeOrder}>Proceed To Checkout</Button>}
+    {cartItems.length!==0&&<LoadingButton loading={orderLoading} loadingPosition='start' sx={{marginTop:'auto',marginBottom:'25px'}} variant='contained' color='success' onClick={placeOrder}>Proceed To Checkout</LoadingButton>}
     </Drawer>
     <Dialog maxWidth={'sm'} fullWidth open={order} onClose={()=>{setOrder(false)}}>
         <div style={{padding:'20px'}}>
